@@ -1,2 +1,0 @@
-# eventsapp
-for cursor
