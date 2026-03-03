@@ -1,0 +1,112 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-eventsapp}
+      POSTGRES_USER: ${POSTGRES_USER:-eventsapp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h 127.0.0.1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    image: ${REGISTRY_IMAGE:?set REGISTRY_IMAGE}-api:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      DATABASE_URL: ${DATABASE_URL:-postgres://${POSTGRES_USER:-eventsapp}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-eventsapp}}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3002:3002"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3002/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  bot:
+    image: ${REGISTRY_IMAGE:?set REGISTRY_IMAGE}-bot:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/bot/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      BOT_TOKEN: ${BOT_TOKEN:?set BOT_TOKEN}
+      API_BASE_URL: ${API_BASE_URL:-http://api:3002}
+    depends_on:
+      api:
+        condition: service_healthy
+
+  web:
+    image: ${REGISTRY_IMAGE:?set REGISTRY_IMAGE}-web:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      API_BASE_URL: ${API_BASE_URL:-http://api:3002}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "80:3000"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  crm-ui:
+    image: ${REGISTRY_IMAGE:?set REGISTRY_IMAGE}-crm-ui:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/crm-ui/Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      API_BASE_URL: ${API_BASE_URL:-http://api:3002}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "8080:3001"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3001').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  postgres_data:
+
