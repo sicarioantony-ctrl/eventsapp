@@ -32,19 +32,15 @@ export default function Home() {
     };
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/leads`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        },
-      );
-      if (res.ok) setSubmitted(true);
+      await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
     } catch {
-      /* API might not be ready yet */
-      setSubmitted(true);
+      /* API might not be ready yet — still show thank-you */
     } finally {
+      setSubmitted(true);
       setLoading(false);
     }
   }
