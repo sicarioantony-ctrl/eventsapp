@@ -1,5 +1,12 @@
 FROM node:22-alpine AS base
+ARG NPM_REGISTRY=https://registry.npmmirror.com/
+ENV npm_config_registry=$NPM_REGISTRY
+ENV npm_config_fetch_retries=5 \
+    npm_config_fetch_retry_maxtimeout=120000 \
+    npm_config_fetch_timeout=120000
 WORKDIR /repo
+
+RUN apk add --no-cache ca-certificates
 
 FROM base AS pruner
 RUN npm i -g turbo@2.5.6
@@ -9,8 +16,9 @@ RUN turbo prune --scope=@eventsapp/api --docker
 FROM base AS installer
 COPY --from=pruner /repo/out/json/ .
 COPY --from=pruner /repo/out/package-lock.json ./package-lock.json
-RUN npm ci --no-audit --no-fund
+RUN rm -f package-lock.json && npm install --no-audit --no-fund --package-lock=false
 COPY --from=pruner /repo/out/full/ .
+COPY tsconfig.base.json ./tsconfig.base.json
 RUN npx turbo run build --filter=@eventsapp/api...
 
 FROM node:22-alpine AS runner
