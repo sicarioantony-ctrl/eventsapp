@@ -211,15 +211,31 @@ export default function Home() {
 
       {/* About */}
       <section id="about" className="border-t border-[#e5e5e5] bg-white">
-        <div className="mx-auto max-w-4xl px-6 py-20 text-center">
-          <h2 className="mb-6 text-3xl font-bold tracking-tight">О нас</h2>
-          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-[#525252]">
+        <div className="mx-auto max-w-4xl px-6 py-20">
+          <h2 className="mb-6 text-center text-3xl font-bold tracking-tight">О нас</h2>
+          <p className="mx-auto max-w-2xl text-center text-lg leading-relaxed text-[#525252]">
             Мы — команда профессионалов в event-индустрии. Организуем
             мероприятия любого масштаба: от камерных мастер-классов до
             масштабных корпоративных событий. Каждый проект — это
             индивидуальный подход, внимание к деталям и гарантия
             незабываемых впечатлений.
           </p>
+
+          <div className="mx-auto mt-12 max-w-xl rounded-xl border border-[#e5e5e5] bg-[#fafafa] p-8">
+            <h3 className="mb-4 text-center text-lg font-semibold">Реквизиты</h3>
+            <div className="space-y-2 text-sm text-[#525252]">
+              <p><span className="font-medium text-[#171717]">ИП</span> Саутина Оксана Сергеевна</p>
+              <p><span className="font-medium text-[#171717]">ИНН:</span> 772983206806</p>
+              <p><span className="font-medium text-[#171717]">ОГРНИП:</span> 321774600786287</p>
+              <p><span className="font-medium text-[#171717]">Юр. адрес:</span> 119517, г. Москва, ул. Матвеевская, д. 1, кв. 423</p>
+              <div className="my-3 border-t border-[#e5e5e5]" />
+              <p><span className="font-medium text-[#171717]">Р/с:</span> 40802810300002909514</p>
+              <p><span className="font-medium text-[#171717]">Банк:</span> АО «ТБанк»</p>
+              <p><span className="font-medium text-[#171717]">К/с:</span> 30101810145250000974</p>
+              <p><span className="font-medium text-[#171717]">БИК:</span> 044525974</p>
+              <p><span className="font-medium text-[#171717]">ИНН банка:</span> 7710140679</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -345,19 +361,39 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#e5e5e5] bg-white">
-        <div className="mx-auto max-w-6xl px-6 py-6">
-          <div className="flex flex-col items-center justify-between gap-4 text-sm text-[#a3a3a3] md:flex-row">
-            <span>&copy; {new Date().getFullYear()} EventsApp</span>
-            <div className="flex gap-6">
+      <footer className="border-t border-[#e5e5e5] bg-[#171717] text-[#a3a3a3]">
+        <div className="mx-auto max-w-6xl px-6 py-10">
+          <div className="grid gap-8 md:grid-cols-3">
+            <div>
+              <span className="text-lg font-bold text-white">
+                Events<span className="text-[#818cf8]">App</span>
+              </span>
+              <p className="mt-3 text-sm leading-relaxed">
+                ИП Саутина Оксана Сергеевна
+                <br />
+                ИНН 772983206806 / ОГРНИП 321774600786287
+              </p>
+            </div>
+            <div>
+              <h4 className="mb-3 text-sm font-semibold text-white">Контакты</h4>
+              <p className="text-sm leading-relaxed">
+                г. Москва, ул. Матвеевская, д. 1
+                <br />
+                info@eventsapp.ru
+              </p>
+            </div>
+            <div>
+              <h4 className="mb-3 text-sm font-semibold text-white">Документы</h4>
               <a
                 href="/privacy"
-                className="transition hover:text-[#171717]"
+                className="text-sm transition hover:text-white"
               >
                 Политика конфиденциальности
               </a>
-              <span>Москва, Россия</span>
             </div>
+          </div>
+          <div className="mt-8 border-t border-[#333] pt-6 text-center text-xs">
+            &copy; {new Date().getFullYear()} EventsApp — ИП Саутина О.С. Все права защищены.
           </div>
         </div>
       </footer>
