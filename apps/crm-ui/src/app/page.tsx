@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
-/* ── Stage definitions ── */
 const STAGES = [
   { key: "NEW", label: "Новый лид", color: "#6366f1" },
   { key: "QUALIFICATION", label: "Квалификация", color: "#8b5cf6" },
@@ -23,6 +22,7 @@ interface Lead {
   id: string;
   contactName: string;
   contactPhone: string;
+  contactEmail?: string | null;
   eventType: string;
   notes: string;
   stage: Stage;
@@ -34,24 +34,14 @@ interface TeamMember {
   role: Role;
 }
 
-/* ── Initial demo data ── */
-const INITIAL_LEADS: Lead[] = [
-  { id: "1", contactName: "Иван Петров", contactPhone: "+7 999 111-22-33", eventType: "Корпоратив", notes: "", stage: "NEW" },
-  { id: "2", contactName: "Анна Сидорова", contactPhone: "+7 999 444-55-66", eventType: "Свадьба", notes: "Бюджет 500к", stage: "NEW" },
-  { id: "3", contactName: "ООО «Рога и копыта»", contactPhone: "+7 495 000-00-00", eventType: "Конференция", notes: "200 человек", stage: "QUALIFICATION" },
-  { id: "4", contactName: "Елена Кузнецова", contactPhone: "+7 999 777-88-99", eventType: "День рождения", notes: "", stage: "MEETING_SCHEDULED" },
-  { id: "5", contactName: "Сергей Волков", contactPhone: "+7 999 333-22-11", eventType: "Презентация", notes: "Запуск продукта", stage: "AGREEMENT_AND_CONTRACT" },
-  { id: "6", contactName: "Мария Иванова", contactPhone: "+7 999 555-66-77", eventType: "Свадьба", notes: "Кубинская тема", stage: "WON" },
-];
-
 const INITIAL_TEAM: TeamMember[] = [
   { id: "u1", name: "Администратор", role: "ADMIN" },
   { id: "u2", name: "Менеджер Алексей", role: "MANAGER" },
 ];
 
-/* ── Component ── */
 export default function CrmDashboard() {
-  const [leads, setLeads] = useState<Lead[]>(INITIAL_LEADS);
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
   const [team, setTeam] = useState<TeamMember[]>(INITIAL_TEAM);
   const [currentUser, setCurrentUser] = useState<TeamMember>(INITIAL_TEAM[0]);
 
@@ -65,6 +55,40 @@ export default function CrmDashboard() {
 
   const isAdmin = currentUser.role === "ADMIN";
 
+  /* ── Load leads from API ── */
+  const fetchLeads = useCallback(async () => {
+    try {
+      const res = await fetch("/api/leads");
+      if (res.ok) {
+        const data = await res.json();
+        setLeads(data);
+      }
+    } catch {
+      /* API may be unavailable */
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchLeads();
+    const interval = setInterval(fetchLeads, 10000);
+    return () => clearInterval(interval);
+  }, [fetchLeads]);
+
+  /* ── Persist lead changes to API ── */
+  async function patchLead(id: string, updates: Partial<Lead>) {
+    try {
+      await fetch(`/api/leads/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+    } catch {
+      /* silent */
+    }
+  }
+
   /* ── Drag & drop ── */
   const handleDragStart = useCallback((id: string) => setDraggedId(id), []);
   const handleDragOver = useCallback((e: React.DragEvent) => e.preventDefault(), []);
@@ -74,24 +98,35 @@ export default function CrmDashboard() {
       setLeads((prev) =>
         prev.map((l) => (l.id === draggedId ? { ...l, stage } : l)),
       );
+      patchLead(draggedId, { stage });
       setDraggedId(null);
     },
     [draggedId],
   );
 
-  /* ── Lead CRUD ── */
+  /* ── Lead save ── */
   function saveLead(updated: Lead) {
     setLeads((prev) =>
       prev.map((l) => (l.id === updated.id ? updated : l)),
     );
+    patchLead(updated.id, updated);
     setEditingLead(null);
   }
 
-  function addLead(lead: Omit<Lead, "id">) {
-    setLeads((prev) => [
-      ...prev,
-      { ...lead, id: crypto.randomUUID() },
-    ]);
+  async function addLead(lead: Omit<Lead, "id">) {
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lead),
+      });
+      if (res.ok) {
+        const created = await res.json();
+        setLeads((prev) => [...prev, created]);
+      }
+    } catch {
+      /* silent */
+    }
     setShowAddLead(false);
   }
 
@@ -162,7 +197,7 @@ export default function CrmDashboard() {
         </div>
       </header>
 
-      {/* Team panel (admin only) */}
+      {/* Team panel */}
       {showTeamPanel && isAdmin && (
         <div className="border-b border-[#e5e5e5] bg-white">
           <div className="mx-auto max-w-[1600px] px-6 py-4">
@@ -223,7 +258,17 @@ export default function CrmDashboard() {
 
       {/* Kanban Board */}
       <div className="mx-auto max-w-[1600px] px-4 py-6">
-        <h1 className="mb-6 text-2xl font-bold">Воронка лидов</h1>
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Воронка лидов</h1>
+          {loading && (
+            <span className="text-sm text-[#a3a3a3]">Загрузка...</span>
+          )}
+          {!loading && leads.length === 0 && (
+            <span className="text-sm text-[#a3a3a3]">
+              Нет заявок. Отправьте тестовую заявку с сайта.
+            </span>
+          )}
+        </div>
 
         <div className="flex gap-3 overflow-x-auto pb-4">
           {STAGES.map((stage) => {
@@ -235,7 +280,6 @@ export default function CrmDashboard() {
                 onDragOver={handleDragOver}
                 onDrop={() => handleDrop(stage.key)}
               >
-                {/* Column header */}
                 <div className="flex items-center gap-2 border-b border-[#f0f0f0] px-4 py-3">
                   <div
                     className="h-2.5 w-2.5 rounded-full"
@@ -247,7 +291,6 @@ export default function CrmDashboard() {
                   </span>
                 </div>
 
-                {/* Cards */}
                 <div className="flex min-h-[80px] flex-col gap-2 p-3">
                   {stageLeads.length === 0 ? (
                     <p className="py-4 text-center text-xs text-[#a3a3a3]">
@@ -266,16 +309,10 @@ export default function CrmDashboard() {
                             : "border-[#e5e5e5] bg-white"
                         }`}
                       >
-                        <p className="text-sm font-medium">
-                          {lead.contactName}
-                        </p>
-                        <p className="mt-1 text-xs text-[#737373]">
-                          {lead.eventType}
-                        </p>
+                        <p className="text-sm font-medium">{lead.contactName}</p>
+                        <p className="mt-1 text-xs text-[#737373]">{lead.eventType}</p>
                         {lead.contactPhone && (
-                          <p className="mt-0.5 text-xs text-[#a3a3a3]">
-                            {lead.contactPhone}
-                          </p>
+                          <p className="mt-0.5 text-xs text-[#a3a3a3]">{lead.contactPhone}</p>
                         )}
                       </div>
                     ))
@@ -315,7 +352,6 @@ export default function CrmDashboard() {
   );
 }
 
-/* ── Modal ── */
 function Modal({
   children,
   onClose,
@@ -337,7 +373,6 @@ function Modal({
   );
 }
 
-/* ── Lead Form ── */
 function LeadForm({
   lead,
   isAdmin,

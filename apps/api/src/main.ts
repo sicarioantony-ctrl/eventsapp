@@ -76,6 +76,23 @@ app.get("/api/leads", (_req, res) => {
   res.json(leads);
 });
 
+app.patch("/api/leads/:id", (req, res) => {
+  const idx = leads.findIndex((l) => l.id === req.params.id);
+  if (idx === -1) {
+    res.status(404).json({ error: "Lead not found" });
+    return;
+  }
+  const allowed = ["contactName", "contactPhone", "contactEmail", "eventType", "notes", "stage", "lostReason"];
+  for (const key of allowed) {
+    if (req.body[key] !== undefined) {
+      leads[idx][key] = req.body[key];
+    }
+  }
+  leads[idx].updatedAt = new Date().toISOString();
+  console.log(`[api] Updated lead ${req.params.id}: stage=${leads[idx].stage}`);
+  res.json(leads[idx]);
+});
+
 app.listen(PORT, () => {
   console.log(`api listening on :${PORT}`);
 });

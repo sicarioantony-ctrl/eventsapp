@@ -327,20 +327,20 @@ export default function Home() {
               </div>
 
               {/* ФЗ-152 consent checkbox */}
-              <label className="flex items-start gap-3 cursor-pointer">
+              <label className="flex items-start gap-3 cursor-pointer rounded-lg border border-[#e5e5e5] bg-[#fafafa] p-4 transition hover:border-[#6366f1]/30">
                 <input
                   type="checkbox"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
-                  className="mt-1 h-4 w-4 rounded border-[#d4d4d4] text-[#6366f1] accent-[#6366f1]"
+                  className="mt-0.5 h-5 w-5 shrink-0 rounded border-[#d4d4d4] text-[#6366f1] accent-[#6366f1]"
                 />
-                <span className="text-xs leading-relaxed text-[#525252]">
+                <span className="text-sm leading-relaxed text-[#525252]">
                   Я даю согласие на обработку моих персональных данных в
                   соответствии с{" "}
                   <a
                     href="/privacy"
                     target="_blank"
-                    className="text-[#6366f1] underline underline-offset-2 hover:text-[#4f46e5]"
+                    className="font-medium text-[#6366f1] underline underline-offset-2 hover:text-[#4f46e5]"
                   >
                     Политикой конфиденциальности
                   </a>{" "}
