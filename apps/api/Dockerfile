@@ -1,5 +1,5 @@
 FROM node:22-alpine AS base
-ARG NPM_REGISTRY=https://registry.npmmirror.com/
+ARG NPM_REGISTRY=https://registry.npmjs.org/
 ENV npm_config_registry=$NPM_REGISTRY
 ENV npm_config_fetch_retries=5 \
     npm_config_fetch_retry_maxtimeout=120000 \
