@@ -28,6 +28,8 @@ services:
       NODE_ENV: production
       PORT: 3002
       DATABASE_URL: ${DATABASE_URL:-postgres://${POSTGRES_USER:-eventsapp}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-eventsapp}}
+      BOT_TOKEN: ${BOT_TOKEN:-}
+      NOTIFY_CHAT_ID: ${NOTIFY_CHAT_ID:-}
     depends_on:
       postgres:
         condition: service_healthy

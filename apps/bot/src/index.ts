@@ -8,7 +8,16 @@ if (!token || token === "your-telegram-bot-token-or-placeholder") {
 
 const bot = new Telegraf(token);
 
-bot.start((ctx) => ctx.reply("Eventsapp bot is online."));
+bot.start((ctx) =>
+  ctx.reply(
+    `Добро пожаловать в EventsApp Bot!\n\nВаш Chat ID: ${ctx.chat.id}\n\nДобавьте этот ID в переменную NOTIFY_CHAT_ID в файле .env, чтобы получать уведомления о новых заявках.`,
+  ),
+);
+
+bot.command("chatid", (ctx) =>
+  ctx.reply(`Ваш Chat ID: ${ctx.chat.id}`),
+);
+
 bot.command("ping", (ctx) => ctx.reply("pong"));
 
 bot.catch((err) => {
