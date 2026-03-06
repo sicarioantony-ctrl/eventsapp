@@ -18,6 +18,7 @@ COPY --from=pruner /repo/out/json/ .
 COPY --from=pruner /repo/out/package-lock.json ./package-lock.json
 RUN rm -f package-lock.json && npm install --no-audit --no-fund --package-lock=false
 COPY --from=pruner /repo/out/full/ .
+COPY tsconfig.base.json ./tsconfig.base.json
 RUN npx turbo run build --filter=@eventsapp/crm-ui...
 
 FROM node:22-alpine AS runner
