@@ -8,15 +8,19 @@ const EVENT_TYPES = [
   "День рождения",
   "Конференция",
   "Презентация",
+  "Мастер-класс",
+  "Вечеринка",
   "Другое",
 ];
 
 export default function Home() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!agreed) return;
     setLoading(true);
 
     const form = e.currentTarget;
@@ -48,7 +52,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#fafafa] text-[#171717]">
       {/* Header */}
-      <header className="border-b border-[#e5e5e5] bg-white">
+      <header className="sticky top-0 z-50 border-b border-[#e5e5e5] bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <span className="text-xl font-bold tracking-tight">
             Events<span className="text-[#6366f1]">App</span>
@@ -57,6 +61,9 @@ export default function Home() {
             <a href="#services" className="transition hover:text-[#171717]">
               Услуги
             </a>
+            <a href="#masterclass" className="transition hover:text-[#171717]">
+              Мастер-классы
+            </a>
             <a href="#about" className="transition hover:text-[#171717]">
               О нас
             </a>
@@ -64,6 +71,12 @@ export default function Home() {
               Контакты
             </a>
           </nav>
+          <a
+            href="#contact"
+            className="rounded-lg bg-[#6366f1] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#4f46e5] md:block hidden"
+          >
+            Оставить заявку
+          </a>
         </div>
       </header>
 
@@ -75,142 +88,277 @@ export default function Home() {
           <span className="text-[#6366f1]">которые запоминаются</span>
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-lg text-[#525252]">
-          От корпоративов до свадеб — полный цикл подготовки и проведения
-          событий любого масштаба.
+          Корпоративы, свадьбы, мастер-классы, латино-вечеринки — полный цикл
+          подготовки и проведения событий любого масштаба.
         </p>
-        <a
-          href="#contact"
-          className="mt-8 inline-block rounded-lg bg-[#6366f1] px-8 py-3 text-sm font-semibold text-white transition hover:bg-[#4f46e5]"
-        >
-          Оставить заявку
-        </a>
+        <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <a
+            href="#contact"
+            className="rounded-lg bg-[#6366f1] px-8 py-3 text-sm font-semibold text-white transition hover:bg-[#4f46e5]"
+          >
+            Оставить заявку
+          </a>
+          <a
+            href="#services"
+            className="rounded-lg border border-[#d4d4d4] px-8 py-3 text-sm font-semibold transition hover:bg-[#f5f5f5]"
+          >
+            Наши услуги
+          </a>
+        </div>
       </section>
 
       {/* Services */}
       <section id="services" className="border-t border-[#e5e5e5] bg-white">
-        <div className="mx-auto grid max-w-6xl gap-8 px-6 py-20 md:grid-cols-3">
-          {[
-            {
-              title: "Корпоративы",
-              desc: "Тимбилдинги, праздники, выездные мероприятия для вашей команды.",
-            },
-            {
-              title: "Свадьбы",
-              desc: "Полное сопровождение: от концепции до последнего танца.",
-            },
-            {
-              title: "Конференции",
-              desc: "Техническое обеспечение, спикеры, площадки — всё под ключ.",
-            },
-          ].map((s) => (
-            <div
-              key={s.title}
-              className="rounded-xl border border-[#e5e5e5] p-8 transition hover:shadow-md"
-            >
-              <h3 className="mb-3 text-lg font-semibold">{s.title}</h3>
-              <p className="text-sm leading-relaxed text-[#525252]">{s.desc}</p>
-            </div>
-          ))}
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <h2 className="mb-12 text-center text-3xl font-bold tracking-tight">
+            Наши услуги
+          </h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: "🏢",
+                title: "Корпоративы",
+                desc: "Тимбилдинги, праздники, выездные мероприятия для вашей команды. Сценарий, площадка, кейтеринг — всё берём на себя.",
+              },
+              {
+                icon: "💍",
+                title: "Свадьбы",
+                desc: "Полное сопровождение: от концепции и декора до координации в день торжества.",
+              },
+              {
+                icon: "🎤",
+                title: "Конференции",
+                desc: "Техническое обеспечение, спикеры, регистрация, площадки — организация деловых мероприятий под ключ.",
+              },
+              {
+                icon: "🎂",
+                title: "Дни рождения",
+                desc: "Яркие праздники для детей и взрослых с аниматорами, программой и декором.",
+              },
+              {
+                icon: "🎁",
+                title: "Презентации",
+                desc: "Запуск продуктов, пресс-конференции, промо-ивенты с вау-эффектом.",
+              },
+              {
+                icon: "🎉",
+                title: "Вечеринки",
+                desc: "Тематические вечеринки любого формата: от камерных до масштабных клубных событий.",
+              },
+            ].map((s) => (
+              <div
+                key={s.title}
+                className="rounded-xl border border-[#e5e5e5] p-8 transition hover:border-[#6366f1]/30 hover:shadow-md"
+              >
+                <div className="mb-4 text-3xl">{s.icon}</div>
+                <h3 className="mb-3 text-lg font-semibold">{s.title}</h3>
+                <p className="text-sm leading-relaxed text-[#525252]">
+                  {s.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Masterclass */}
+      <section id="masterclass" className="border-t border-[#e5e5e5] bg-[#fafafa]">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <h2 className="mb-4 text-center text-3xl font-bold tracking-tight">
+            Мастер-классы
+          </h2>
+          <p className="mx-auto mb-12 max-w-2xl text-center text-[#525252]">
+            Зажигательные форматы для корпоративов, праздников и тимбилдинга.
+            Профессиональные артисты и хореографы.
+          </p>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                icon: "🎧",
+                title: "DJ сет",
+                desc: "Профессиональный диджей подберёт музыку под настроение и формат вашего мероприятия.",
+              },
+              {
+                icon: "💃",
+                title: "Латино танцы",
+                desc: "Сальса, бачата, реггетон — зажигательный мастер-класс для гостей любого уровня.",
+              },
+              {
+                icon: "🎙️",
+                title: "Ведущий-хореограф",
+                desc: "Харизматичный ведущий, который не только развлекает, но и учит танцевать.",
+              },
+              {
+                icon: "🇨🇺",
+                title: "Кубинская вечеринка",
+                desc: "Полное погружение в атмосферу Гаваны: музыка, танцы, коктейли и декор.",
+              },
+            ].map((s) => (
+              <div
+                key={s.title}
+                className="rounded-xl border border-[#e5e5e5] bg-white p-6 transition hover:border-[#6366f1]/30 hover:shadow-md"
+              >
+                <div className="mb-3 text-3xl">{s.icon}</div>
+                <h3 className="mb-2 text-base font-semibold">{s.title}</h3>
+                <p className="text-sm leading-relaxed text-[#525252]">
+                  {s.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About */}
+      <section id="about" className="border-t border-[#e5e5e5] bg-white">
+        <div className="mx-auto max-w-4xl px-6 py-20 text-center">
+          <h2 className="mb-6 text-3xl font-bold tracking-tight">О нас</h2>
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-[#525252]">
+            Мы — команда профессионалов в event-индустрии. Организуем
+            мероприятия любого масштаба: от камерных мастер-классов до
+            масштабных корпоративных событий. Каждый проект — это
+            индивидуальный подход, внимание к деталям и гарантия
+            незабываемых впечатлений.
+          </p>
         </div>
       </section>
 
       {/* Contact / Lead Form */}
-      <section id="contact" className="mx-auto max-w-2xl px-6 py-20">
-        <h2 className="mb-8 text-center text-3xl font-bold tracking-tight">
-          Оставить заявку
-        </h2>
+      <section
+        id="contact"
+        className="border-t border-[#e5e5e5] bg-[#fafafa]"
+      >
+        <div className="mx-auto max-w-2xl px-6 py-20">
+          <h2 className="mb-8 text-center text-3xl font-bold tracking-tight">
+            Оставить заявку
+          </h2>
 
-        {submitted ? (
-          <div className="rounded-xl border border-[#c7d2fe] bg-[#eef2ff] p-8 text-center">
-            <p className="text-lg font-semibold text-[#4338ca]">
-              Спасибо! Мы свяжемся с вами в ближайшее время.
-            </p>
-          </div>
-        ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-5 rounded-xl border border-[#e5e5e5] bg-white p-8"
-          >
-            <div>
-              <label className="mb-1 block text-sm font-medium">Имя</label>
-              <input
-                name="name"
-                required
-                className="w-full rounded-lg border border-[#d4d4d4] px-4 py-2.5 text-sm outline-none transition focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20"
-                placeholder="Иван Иванов"
-              />
+          {submitted ? (
+            <div className="rounded-xl border border-[#c7d2fe] bg-[#eef2ff] p-8 text-center">
+              <p className="text-lg font-semibold text-[#4338ca]">
+                Спасибо! Мы свяжемся с вами в ближайшее время.
+              </p>
             </div>
-
-            <div className="grid gap-5 md:grid-cols-2">
+          ) : (
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5 rounded-xl border border-[#e5e5e5] bg-white p-8"
+            >
               <div>
-                <label className="mb-1 block text-sm font-medium">
-                  Телефон
-                </label>
+                <label className="mb-1 block text-sm font-medium">Имя</label>
                 <input
-                  name="phone"
-                  type="tel"
+                  name="name"
                   required
                   className="w-full rounded-lg border border-[#d4d4d4] px-4 py-2.5 text-sm outline-none transition focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20"
-                  placeholder="+7 (999) 123-45-67"
+                  placeholder="Иван Иванов"
                 />
               </div>
+
+              <div className="grid gap-5 md:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-sm font-medium">
+                    Телефон
+                  </label>
+                  <input
+                    name="phone"
+                    type="tel"
+                    required
+                    className="w-full rounded-lg border border-[#d4d4d4] px-4 py-2.5 text-sm outline-none transition focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20"
+                    placeholder="+7 (999) 123-45-67"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium">
+                    Email
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    className="w-full rounded-lg border border-[#d4d4d4] px-4 py-2.5 text-sm outline-none transition focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20"
+                    placeholder="ivan@example.com"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="mb-1 block text-sm font-medium">Email</label>
-                <input
-                  name="email"
-                  type="email"
+                <label className="mb-1 block text-sm font-medium">
+                  Тип мероприятия
+                </label>
+                <select
+                  name="eventType"
+                  required
                   className="w-full rounded-lg border border-[#d4d4d4] px-4 py-2.5 text-sm outline-none transition focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20"
-                  placeholder="ivan@example.com"
+                >
+                  <option value="">Выберите...</option>
+                  {EVENT_TYPES.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Комментарий
+                </label>
+                <textarea
+                  name="notes"
+                  rows={3}
+                  className="w-full rounded-lg border border-[#d4d4d4] px-4 py-2.5 text-sm outline-none transition focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20"
+                  placeholder="Расскажите о вашем мероприятии..."
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="mb-1 block text-sm font-medium">
-                Тип мероприятия
+              {/* ФЗ-152 consent checkbox */}
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-[#d4d4d4] text-[#6366f1] accent-[#6366f1]"
+                />
+                <span className="text-xs leading-relaxed text-[#525252]">
+                  Я даю согласие на обработку моих персональных данных в
+                  соответствии с{" "}
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    className="text-[#6366f1] underline underline-offset-2 hover:text-[#4f46e5]"
+                  >
+                    Политикой конфиденциальности
+                  </a>{" "}
+                  и Федеральным законом № 152-ФЗ «О персональных данных».
+                </span>
               </label>
-              <select
-                name="eventType"
-                required
-                className="w-full rounded-lg border border-[#d4d4d4] px-4 py-2.5 text-sm outline-none transition focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20"
+
+              <button
+                type="submit"
+                disabled={loading || !agreed}
+                className="w-full rounded-lg bg-[#6366f1] py-3 text-sm font-semibold text-white transition hover:bg-[#4f46e5] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <option value="">Выберите...</option>
-                {EVENT_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium">
-                Комментарий
-              </label>
-              <textarea
-                name="notes"
-                rows={3}
-                className="w-full rounded-lg border border-[#d4d4d4] px-4 py-2.5 text-sm outline-none transition focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/20"
-                placeholder="Расскажите о вашем мероприятии..."
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-lg bg-[#6366f1] py-3 text-sm font-semibold text-white transition hover:bg-[#4f46e5] disabled:opacity-50"
-            >
-              {loading ? "Отправка..." : "Отправить заявку"}
-            </button>
-          </form>
-        )}
+                {loading ? "Отправка..." : "Отправить заявку"}
+              </button>
+            </form>
+          )}
+        </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-[#e5e5e5] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6 text-sm text-[#a3a3a3]">
-          <span>&copy; {new Date().getFullYear()} EventsApp</span>
-          <span>Москва, Россия</span>
+        <div className="mx-auto max-w-6xl px-6 py-6">
+          <div className="flex flex-col items-center justify-between gap-4 text-sm text-[#a3a3a3] md:flex-row">
+            <span>&copy; {new Date().getFullYear()} EventsApp</span>
+            <div className="flex gap-6">
+              <a
+                href="/privacy"
+                className="transition hover:text-[#171717]"
+              >
+                Политика конфиденциальности
+              </a>
+              <span>Москва, Россия</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
