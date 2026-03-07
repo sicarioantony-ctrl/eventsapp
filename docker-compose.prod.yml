@@ -69,6 +69,8 @@ services:
       NODE_ENV: production
       PORT: 3000
       API_BASE_URL: ${API_BASE_URL:-http://api:3002}
+    volumes:
+      - ${MUSIC_FOLDER:-./apps/web/public/music}:/app/apps/web/public/music
     depends_on:
       api:
         condition: service_healthy

@@ -21,9 +21,9 @@ export function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#e5e5e5] bg-white p-4 shadow-lg md:p-6">
+    <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#e5e5e5] bg-white p-4 shadow-lg dark:border-[#333] dark:bg-[#171717] md:p-6">
       <div className="mx-auto flex max-w-4xl flex-col items-center gap-4 md:flex-row">
-        <p className="flex-1 text-sm leading-relaxed text-[#525252]">
+        <p className="flex-1 text-sm leading-relaxed text-[#525252] dark:text-[#a3a3a3]">
           Мы используем файлы cookie для корректной работы сайта и анализа
           трафика. Продолжая использование сайта, вы соглашаетесь с нашей{" "}
           <a

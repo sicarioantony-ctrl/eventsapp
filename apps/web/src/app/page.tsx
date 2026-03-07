@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { MusicPlayerWrapper } from "@/components/music-player-wrapper";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const EVENT_TYPES = [
   "Корпоратив",
@@ -50,33 +52,36 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-[#171717]">
+    <div className="min-h-screen bg-[#fafafa] text-[#171717] dark:bg-[#0a0a0a] dark:text-[#ededed]">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-[#e5e5e5] bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-[#e5e5e5] bg-white/95 backdrop-blur dark:border-[#333] dark:bg-[#0a0a0a]/95">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
           <span className="text-xl font-bold tracking-tight">
             Events<span className="text-[#6366f1]">App</span>
           </span>
-          <nav className="hidden gap-8 text-sm font-medium text-[#525252] md:flex">
-            <a href="#services" className="transition hover:text-[#171717]">
+          <nav className="hidden gap-8 text-sm font-medium text-[#525252] dark:text-[#a3a3a3] md:flex">
+            <a href="#services" className="transition hover:text-[#171717] dark:hover:text-white">
               Услуги
             </a>
-            <a href="#masterclass" className="transition hover:text-[#171717]">
+            <a href="#masterclass" className="transition hover:text-[#171717] dark:hover:text-white">
               Мастер-классы
             </a>
-            <a href="#about" className="transition hover:text-[#171717]">
+            <a href="#about" className="transition hover:text-[#171717] dark:hover:text-white">
               О нас
             </a>
-            <a href="#contact" className="transition hover:text-[#171717]">
+            <a href="#contact" className="transition hover:text-[#171717] dark:hover:text-white">
               Контакты
             </a>
           </nav>
-          <a
-            href="#contact"
-            className="rounded-lg bg-[#6366f1] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#4f46e5] md:block hidden"
-          >
-            Оставить заявку
-          </a>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <a
+              href="#contact"
+              className="rounded-lg bg-[#6366f1] px-5 py-2 text-sm font-semibold text-white transition hover:bg-[#4f46e5] md:block hidden"
+            >
+              Оставить заявку
+            </a>
+          </div>
         </div>
       </header>
 
@@ -87,7 +92,7 @@ export default function Home() {
           <br />
           <span className="text-[#6366f1]">которые запоминаются</span>
         </h1>
-        <p className="mx-auto mt-6 max-w-xl text-lg text-[#525252]">
+        <p className="mx-auto mt-6 max-w-xl text-lg text-[#525252] dark:text-[#a3a3a3]">
           Корпоративы, свадьбы, мастер-классы, латино-вечеринки — полный цикл
           подготовки и проведения событий любого масштаба.
         </p>
@@ -100,15 +105,31 @@ export default function Home() {
           </a>
           <a
             href="#services"
-            className="rounded-lg border border-[#d4d4d4] px-8 py-3 text-sm font-semibold transition hover:bg-[#f5f5f5]"
+            className="rounded-lg border border-[#d4d4d4] px-8 py-3 text-sm font-semibold transition hover:bg-[#f5f5f5] dark:border-[#404040] dark:hover:bg-[#262626]"
           >
             Наши услуги
           </a>
         </div>
       </section>
 
+      {/* Music Player */}
+      <section className="border-t border-[#e5e5e5] bg-[#fafafa] py-12 dark:border-[#333] dark:bg-[#0a0a0a]">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:justify-center">
+            <img
+              src="/images/dj-event.png"
+              alt="DJ на мероприятии"
+              className="h-48 w-auto rounded-xl object-cover shadow-lg md:h-56 md:max-w-xs"
+            />
+            <div className="w-full max-w-2xl">
+              <MusicPlayerWrapper embedded />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Services */}
-      <section id="services" className="border-t border-[#e5e5e5] bg-white">
+      <section id="services" className="border-t border-[#e5e5e5] bg-white dark:border-[#333] dark:bg-[#171717]">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <h2 className="mb-12 text-center text-3xl font-bold tracking-tight">
             Наши услуги
@@ -148,11 +169,11 @@ export default function Home() {
             ].map((s) => (
               <div
                 key={s.title}
-                className="rounded-xl border border-[#e5e5e5] p-8 transition hover:border-[#6366f1]/30 hover:shadow-md"
+                className="rounded-xl border border-[#e5e5e5] p-8 transition hover:border-[#6366f1]/30 hover:shadow-md dark:border-[#333] dark:hover:border-[#6366f1]/40"
               >
                 <div className="mb-4 text-3xl">{s.icon}</div>
                 <h3 className="mb-3 text-lg font-semibold">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-[#525252]">
+                <p className="text-sm leading-relaxed text-[#525252] dark:text-[#a3a3a3]">
                   {s.desc}
                 </p>
               </div>
@@ -162,12 +183,12 @@ export default function Home() {
       </section>
 
       {/* Masterclass */}
-      <section id="masterclass" className="border-t border-[#e5e5e5] bg-[#fafafa]">
+      <section id="masterclass" className="border-t border-[#e5e5e5] bg-[#fafafa] dark:border-[#333] dark:bg-[#0a0a0a]">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <h2 className="mb-4 text-center text-3xl font-bold tracking-tight">
             Мастер-классы
           </h2>
-          <p className="mx-auto mb-12 max-w-2xl text-center text-[#525252]">
+          <p className="mx-auto mb-12 max-w-2xl text-center text-[#525252] dark:text-[#a3a3a3]">
             Зажигательные форматы для корпоративов, праздников и тимбилдинга.
             Профессиональные артисты и хореографы.
           </p>
@@ -196,11 +217,11 @@ export default function Home() {
             ].map((s) => (
               <div
                 key={s.title}
-                className="rounded-xl border border-[#e5e5e5] bg-white p-6 transition hover:border-[#6366f1]/30 hover:shadow-md"
+                className="rounded-xl border border-[#e5e5e5] bg-white p-6 transition hover:border-[#6366f1]/30 hover:shadow-md dark:border-[#333] dark:bg-[#171717] dark:hover:border-[#6366f1]/40"
               >
                 <div className="mb-3 text-3xl">{s.icon}</div>
                 <h3 className="mb-2 text-base font-semibold">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-[#525252]">
+                <p className="text-sm leading-relaxed text-[#525252] dark:text-[#a3a3a3]">
                   {s.desc}
                 </p>
               </div>
@@ -210,10 +231,10 @@ export default function Home() {
       </section>
 
       {/* About */}
-      <section id="about" className="border-t border-[#e5e5e5] bg-white">
+      <section id="about" className="border-t border-[#e5e5e5] bg-white dark:border-[#333] dark:bg-[#171717]">
         <div className="mx-auto max-w-4xl px-6 py-20">
           <h2 className="mb-6 text-center text-3xl font-bold tracking-tight">О нас</h2>
-          <p className="mx-auto max-w-2xl text-center text-lg leading-relaxed text-[#525252]">
+          <p className="mx-auto max-w-2xl text-center text-lg leading-relaxed text-[#525252] dark:text-[#a3a3a3]">
             Мы — команда профессионалов в event-индустрии. Организуем
             мероприятия любого масштаба: от камерных мастер-классов до
             масштабных корпоративных событий. Каждый проект — это
@@ -221,14 +242,14 @@ export default function Home() {
             незабываемых впечатлений.
           </p>
 
-          <div className="mx-auto mt-12 max-w-xl rounded-xl border border-[#e5e5e5] bg-[#fafafa] p-8">
+          <div className="mx-auto mt-12 max-w-xl rounded-xl border border-[#e5e5e5] bg-[#fafafa] p-8 dark:border-[#333] dark:bg-[#0a0a0a]">
             <h3 className="mb-4 text-center text-lg font-semibold">Реквизиты</h3>
-            <div className="space-y-2 text-sm text-[#525252]">
-              <p><span className="font-medium text-[#171717]">ИП</span> Саутина Оксана Сергеевна</p>
+            <div className="space-y-2 text-sm text-[#525252] dark:text-[#a3a3a3]">
+              <p><span className="font-medium text-[#171717] dark:text-[#ededed]">ИП</span> Саутина Оксана Сергеевна</p>
               <p><span className="font-medium text-[#171717]">ИНН:</span> 772983206806</p>
               <p><span className="font-medium text-[#171717]">ОГРНИП:</span> 321774600786287</p>
               <p><span className="font-medium text-[#171717]">Юр. адрес:</span> 119517, г. Москва, ул. Матвеевская, д. 1, кв. 423</p>
-              <div className="my-3 border-t border-[#e5e5e5]" />
+              <div className="my-3 border-t border-[#e5e5e5] dark:border-[#333]" />
               <p><span className="font-medium text-[#171717]">Р/с:</span> 40802810300002909514</p>
               <p><span className="font-medium text-[#171717]">Банк:</span> АО «ТБанк»</p>
               <p><span className="font-medium text-[#171717]">К/с:</span> 30101810145250000974</p>
@@ -242,7 +263,7 @@ export default function Home() {
       {/* Contact / Lead Form */}
       <section
         id="contact"
-        className="border-t border-[#e5e5e5] bg-[#fafafa]"
+        className="border-t border-[#e5e5e5] bg-[#fafafa] dark:border-[#333] dark:bg-[#0a0a0a]"
       >
         <div className="mx-auto max-w-2xl px-6 py-20">
           <h2 className="mb-8 text-center text-3xl font-bold tracking-tight">
@@ -258,7 +279,7 @@ export default function Home() {
           ) : (
             <form
               onSubmit={handleSubmit}
-              className="space-y-5 rounded-xl border border-[#e5e5e5] bg-white p-8"
+              className="space-y-5 rounded-xl border border-[#e5e5e5] bg-white p-8 dark:border-[#333] dark:bg-[#262626]"
             >
               <div>
                 <label className="mb-1 block text-sm font-medium">Имя</label>
